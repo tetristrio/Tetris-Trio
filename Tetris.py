@@ -1,5 +1,4 @@
 # imports
-import turtle
 import pygame
 import random
 pygame.init()
