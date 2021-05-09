@@ -1,4 +1,5 @@
 # imports
+import turtle
 import pygame
 import random
 pygame.init()
@@ -234,7 +235,7 @@ def clear_rows(grid, locked):
 # function will display the next shape that is going to be displayed
 def draw_next_shape(shape, surface):
     font = pygame.font.SysFont('bold', 40)
-    label = font.render('Next Shape', 1, (255, 0, 255))
+    label = font.render('Next Shape', 1, (255, 0, 0))
     sx = x_topleft + display_width + 50
     sy = y_topleft + display_height/2 - 100
     format = shape.shape[shape.rotation % len(shape.shape)]
@@ -249,11 +250,11 @@ def draw_next_shape(shape, surface):
 def draw_window(surface, score = 0):
     root.blit(background3,(0,0))
     font = pygame.font.SysFont('bold', 60)
-    label = font.render('Titanic Tetris', 1, (255, 0, 255))
+    label = font.render('Tetris', 1, (255, 0, 0))
     surface.blit(label, (x_topleft + display_width / 2 - (label.get_width() / 2), 30))
 
     font = pygame.font.SysFont('bold', 60)
-    label = font.render('Score: ' + str(score), 1, (255, 0, 255))
+    label = font.render('Score: ' + str(score), 1, (255, 0, 0))
     sx = x_topleft
     sy = y_topleft
     surface.blit(label, (sx - 200, 30))
@@ -282,8 +283,16 @@ def mainProgram():
 
     while run:
         #sets the fall speed of each block
-        
+        global fall_speed
         fall_speed = 0.27
+        if score >= 100:
+            fall_speed -= 0.10
+
+        if score >= 200:
+            fall_speed -=0.13
+
+        if score >= 300:
+            fall_speed -= 0.17
 
         grid = make_grid(lock_position)
         fall_time += clock.get_rawtime()
@@ -353,6 +362,8 @@ def mainProgram():
             next_block = obtain_shape()
             change_block = False
             score += clear_rows(grid, lock_position) * 10
+            if clear_rows(grid, lock_position) == 4:
+                score += 60
 
         # draws the window and puts the block in the grid
         draw_window(root, score)
@@ -364,8 +375,6 @@ def mainProgram():
 
     # game over image
     root.blit(background2, (0, 0))
-    # displays Game over if no more pieces can go down
-    draw_text_middle('Game Over! ', 40, (255, 255, 255), root)
     # delay for text to be displayed
     pygame.display.update()
     pygame.time.delay(5000)
@@ -374,13 +383,10 @@ def mainProgram():
 def main_window():
     run = True
     while run:
-        root.fill((0,0,0))
         # Background Image
         root.blit(background, (0, 0))
-        # displays the title
-        draw_text_top('Titanic Tetris', 80, (255, 0, 255), root)
         # displays the press any key
-        draw_text_bottom('Press the button to start...', 59, (255, 0, 255), root)
+        draw_text_top('Press the button to start...', 59, (255, 0, 0), root)
         pygame.display.update()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -393,19 +399,16 @@ def main_window():
 
 # sets the display to properly display images
 root = pygame.display.set_mode((screen_width, screen_height))
-pygame.display.set_caption('Tetris Game')
+pygame.display.set_caption('Tetris')
 
 # Main menu background
-background = pygame.image.load('TetrisImage.jpg')
+background = pygame.image.load('NormalTetrisImage.png')
 
 # Game over background
-background2 = pygame.image.load('Explosion.jpg')
+background2 = pygame.image.load('GameOverImage.jpg')
 
 # Ship image
-background3 = pygame.image.load('TitanicShip.jpg')
-
-# Bomb Image
-bombImage = pygame.image.load('bomb.png')
+background3 = pygame.image.load('NormalTetrisImage.png')
 
 # runs the main window
 main_window()
