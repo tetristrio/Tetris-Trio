@@ -1,4 +1,5 @@
 # imports
+import turtle
 import pygame
 import random
 pygame.mixer.pre_init(44100, 16, 2, 4096)
@@ -17,7 +18,7 @@ block_size = 30
 x_topleft = (screen_width - display_width) // 2
 y_topleft = (screen_height - display_height)
 
-# plays background mixer
+# plays background music
 pygame.mixer.music.load('TetrisSound.mp3')
 pygame.mixer.music.set_volume(0.5)
 pygame.mixer.music.play(-1)
@@ -138,8 +139,8 @@ class Block(object):
         self.y = row
         self.shape = shape
         self.color = blocks_colors[blocks.index(shape)]
-        self.rotation = 0
-
+        self.rotation = 0  
+    
 # makes the playable grid
 def make_grid(lock_positions = {}):
     grid = [[(0,0,0) for x in range(10)] for x in range(20)]
@@ -240,7 +241,7 @@ def clear_rows(grid, locked):
 # function will display the next shape that is going to be displayed
 def draw_next_shape(shape, surface):
     font = pygame.font.SysFont('bold', 40)
-    label = font.render('Next Shape', 1, (255, 0, 0))
+    label = font.render('Next Shape', 1, (255, 0, 255))
     sx = x_topleft + display_width + 50
     sy = y_topleft + display_height/2 - 100
     format = shape.shape[shape.rotation % len(shape.shape)]
@@ -255,11 +256,11 @@ def draw_next_shape(shape, surface):
 def draw_window(surface, score = 0):
     root.blit(background3,(0,0))
     font = pygame.font.SysFont('bold', 60)
-    label = font.render('Tetris', 1, (255, 0, 0))
+    label = font.render('Titanic Tetris', 1, (255, 0, 255))
     surface.blit(label, (x_topleft + display_width / 2 - (label.get_width() / 2), 30))
 
     font = pygame.font.SysFont('bold', 60)
-    label = font.render('Score: ' + str(score), 1, (255, 0, 0))
+    label = font.render('Score: ' + str(score), 1, (255, 0, 255))
     sx = x_topleft
     sy = y_topleft
     surface.blit(label, (sx - 200, 30))
@@ -270,7 +271,7 @@ def draw_window(surface, score = 0):
     draw_grid(surface, 20, 10)
     pygame.draw.rect(surface, (255, 255, 0), (x_topleft, y_topleft, display_width, display_height), 5)
 
-
+# main program
 def mainProgram():
     global grid
 
@@ -339,16 +340,17 @@ def mainProgram():
                         current_block.rotation = current_block.rotation - 1 % len(current_block.shape)
 
                 # if key equals down, block moves down a level
-                if event.key == pygame.K_DOWN:
+                elif event.key == pygame.K_DOWN:
                     current_block.y += 1
                     if not space_valid(current_block, grid):
                         current_block.y -= 1
                 #if key equals space, block moves down to last level
-                if event.key == pygame.K_SPACE:
+                elif event.key == pygame.K_SPACE:
                     while space_valid(current_block, grid):
                         current_block.y += 1
                     current_block.y -= 1
                     print(format_changeshape(current_block))
+                
 
         shape_position = format_changeshape(current_block)
 
@@ -380,6 +382,8 @@ def mainProgram():
 
     # game over image
     root.blit(background2, (0, 0))
+    # displays Game over if no more pieces can go down
+    draw_text_middle('Game Over! ', 40, (255, 255, 255), root)
     # delay for text to be displayed
     pygame.display.update()
     pygame.time.delay(5000)
@@ -390,8 +394,10 @@ def main_window():
     while run:
         # Background Image
         root.blit(background, (0, 0))
+        # displays the title
+        draw_text_top('Titanic Tetris', 80, (255, 0, 255), root)
         # displays the press any key
-        draw_text_top('Press the button to start...', 59, (255, 0, 0), root)
+        draw_text_bottom('Press the button to start...', 59, (255, 0, 255), root)
         pygame.display.update()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -404,16 +410,16 @@ def main_window():
 
 # sets the display to properly display images
 root = pygame.display.set_mode((screen_width, screen_height))
-pygame.display.set_caption('Tetris')
+pygame.display.set_caption('Titanic Tetris')
 
 # Main menu background
-background = pygame.image.load('NormalTetrisImage.png')
+background = pygame.image.load('TetrisImage.jpg')
 
 # Game over background
-background2 = pygame.image.load('GameOverImage.jpg')
+background2 = pygame.image.load('Explosion.jpg')
 
 # Ship image
-background3 = pygame.image.load('NormalTetrisImage.png')
+background3 = pygame.image.load('TitanicShip.jpg')
 
 # runs the main window
 main_window()
