@@ -240,7 +240,7 @@ def clear_rows(grid, locked):
 # function will display the next shape that is going to be displayed
 def draw_next_shape(shape, surface):
     font = pygame.font.SysFont('bold', 40)
-    label = font.render('Next Shape', 1, (255, 0, 0))
+    label = font.render('Next Shape', 1, (0, 0, 0))
     sx = x_topleft + display_width + 50
     sy = y_topleft + display_height/2 - 100
     format = shape.shape[shape.rotation % len(shape.shape)]
@@ -253,16 +253,16 @@ def draw_next_shape(shape, surface):
 
 # function displays the window
 def draw_window(surface, score = 0):
-    root.blit(background3,(0,0))
-    font = pygame.font.SysFont('bold', 60)
-    label = font.render('Tetris', 1, (255, 0, 0))
-    surface.blit(label, (x_topleft + display_width / 2 - (label.get_width() / 2), 30))
+    root.blit(background,(0,0))
+    font = pygame.font.SysFont('bold', 100)
+    label = font.render('Tetris', 1, (0, 0, 0))
+    surface.blit(label, (x_topleft + display_width / 2 - (label.get_width() / 2), 60))
 
     font = pygame.font.SysFont('bold', 60)
-    label = font.render('Score: ' + str(score), 1, (255, 0, 0))
+    label = font.render('Score: ' + str(score), 1, (0, 0, 0))
     sx = x_topleft
     sy = y_topleft
-    surface.blit(label, (sx - 200, 30))
+    surface.blit(label, (sx - 200, 75))
     
     for i in range(len(grid)):
         for j in range(len(grid[i])):
@@ -390,7 +390,7 @@ def main_window():
         # Background Image
         root.blit(background, (0, 0))
         # displays the press any key
-        draw_text_top('Press the button to start...', 59, (255, 0, 0), root)
+        draw_text_top('Press the button to start...', 100, (0, 0, 0), root)
         pygame.display.update()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -410,9 +410,6 @@ background = pygame.image.load('NormalTetrisImage.png')
 
 # Game over background
 background2 = pygame.image.load('GameOverTetrisImage.jpg')
-
-# Ship image
-background3 = pygame.image.load('NormalTetrisImage.png')
 
 # runs the main window
 main_window()

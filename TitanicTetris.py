@@ -6,8 +6,8 @@ pygame.mixer.pre_init(44100, 16, 2, 4096)
 pygame.init()
 
 # sets the screen
-screen_width = 1000
-screen_height = 790
+screen_width = 1920
+screen_height = 1040
 display_width = 600
 display_height = 600
 
@@ -335,9 +335,9 @@ def draw_next_shape(shape, surface):
 # function displays the window
 def draw_window(surface, score = 0):
     root.blit(background3,(0,0))
-    font = pygame.font.SysFont('bold', 60)
+    font = pygame.font.SysFont('bold', 200)
     label = font.render('Titanic Tetris', 1, (255, 0, 255))
-    surface.blit(label, (x_topleft + display_width / 2 - (label.get_width() / 2), 30))
+    surface.blit(label, (x_topleft + display_width / 2 - (label.get_width() / 2), 200))
     
     font = pygame.font.SysFont('bold', 60)
     label = font.render('Score: ' + str(score), 1, (255, 0, 255))
@@ -472,11 +472,11 @@ def main_window():
     run = True
     while run:
         # Background Image
-        root.blit(background, (0, 0))
+        root.blit(background3, (0, 0))
         # displays the title
-        draw_text_top('Titanic Tetris', 80, (255, 0, 255), root)
+        draw_text_top('Titanic Tetris', 160, (255, 0, 255), root)
         # displays the press any key
-        draw_text_bottom('Press the button to start...', 59, (255, 0, 255), root)
+        draw_text_bottom('Press amy button to start...', 80, (255, 0, 255), root)
         pygame.display.update()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -491,14 +491,11 @@ def main_window():
 root = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption('Titanic Tetris')
 
-# Main menu background
-background = pygame.image.load('TetrisImage.jpg')
-
 # Game over background
 background2 = pygame.image.load('TitanicTetrisImage.jpg')
 
 # Ship image
-background3 = pygame.image.load('TitanicShip.jpg')
+background3 = pygame.image.load('TitanicShip.jpeg')
 
 # runs the main window
 main_window()
