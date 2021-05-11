@@ -5,8 +5,8 @@ pygame.mixer.pre_init(44100, 16, 2, 4096)
 pygame.init()
 
 # sets the screen
-screen_width = 800
-screen_height = 690
+screen_width = 1920
+screen_height = 1040
 display_width = 300
 display_height = 600
 
