@@ -4,6 +4,16 @@ from random import *
 import random
 pygame.mixer.pre_init(44100, 16, 2, 4096)
 pygame.init()
+pygame.joystick.init()  # main joystick device system
+
+try:
+	j = pygame.joystick.Joystick(0) # create a joystick instance
+	j.init() # init instance
+	print ("Enabled joystick: {0}".format(j.get_name()))
+except pygame.error:
+	print ("no joystick found.")
+BUTTON_SQUARE = 0
+
 
 # sets the screen
 screen_width = 1920
@@ -395,44 +405,50 @@ def mainProgram():
 
         # for if the player isn't playing
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:
+            #if square is pressed
+            if j.get_button(3)==True:
                 run = False
                 pygame.display.quit()
                 quit()
 
             #if the key equals down, the game starts
-            if event.type == pygame.KEYDOWN:
+            if event.type == pygame.JOYAXISMOTION:
                 
                 # if the key equals left, moves block to the left
-                if event.key == pygame.K_LEFT:
+                if j.get_axis(0) <= -1:
                     current_block.x -= 1
                     if not space_valid(current_block, grid):
                         current_block.x += 1
+                    break
 
                 # if key equals right, block moves to the right
-                elif event.key == pygame.K_RIGHT:
+                elif j.get_axis(0) >= 0.5:
                     current_block.x += 1
                     if not space_valid(current_block, grid):
                         current_block.x -= 1
-
-                # if key equals up, the block rotation is different
-                elif event.key == pygame.K_UP:
-                    current_block.rotation = current_block.rotation + 1 % len(current_block.shape)
-                    if not space_valid(current_block, grid):
-                        current_block.rotation = current_block.rotation - 1 % len(current_block.shape)
+                    break
 
                 # if key equals down, block moves down a level
-                elif event.key == pygame.K_DOWN:
+                elif j.get_axis(1) >= 0.5:
                     current_block.y += 1
                     if not space_valid(current_block, grid):
                         current_block.y -= 1
+                    break
                 #if key equals space, block moves down to last level
-                elif event.key == pygame.K_SPACE:
+                elif j.get_axis(1) <= -1:
                     while space_valid(current_block, grid):
                         current_block.y += 1
                     current_block.y -= 1
-                
+                    break
+            
 
+            if event.type == pygame.JOYBUTTONDOWN:
+                current_block.rotation = current_block.rotation + 1 % len(current_block.shape)
+                if not space_valid(current_block, grid):
+                    current_block.rotation = current_block.rotation - 1 % len(current_block.shape)
+                break
+            
+        pygame.event.pump()
         shape_position = format_changeshape(current_block)
 
         # changes the roation based on the list of shapes
@@ -457,6 +473,7 @@ def mainProgram():
         draw_window(root, score)
         draw_next_shape(next_block, root)
         pygame.display.update()
+        pygame.event.pump()
 
         if lost_blocks(lock_position):
             run = False
@@ -479,10 +496,11 @@ def main_window():
         draw_text_bottom('Press amy button to start...', 80, (255, 0, 255), root)
         pygame.display.update()
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:
+            #if square is pressed
+            if j.get_button(3)==True:
                 run = False
-
-            if event.type == pygame.KEYDOWN:
+            #if circle is pressed
+            if j.get_button(0)==True:
                 mainProgram()
 
     pygame.quit()
