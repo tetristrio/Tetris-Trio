@@ -348,7 +348,6 @@ def mainProgram():
                     while space_valid(current_block, grid):
                         current_block.y += 1
                     current_block.y -= 1
-                    print(format_changeshape(current_block))
 
         shape_position = format_changeshape(current_block)
 
