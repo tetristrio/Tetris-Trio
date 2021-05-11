@@ -11,6 +11,18 @@ class MyController(Controller):
 
     def on_x_release(self):
        print("Goodbye world")
+    def on_R3_up(self, value):
+        if (value > 30000):
+            print("R3UP")
+    def on_R3_down(self, value):
+        if (value > 30000):
+            print("R3DOWN")
+   def on_R3_right(self, value):
+       if (value > 30000):
+            print("R3Right")
+    def on_R3_left(self, value):
+        if (value > -30000):
+            print("R3Left")
 
 controller = MyController(interface="/dev/input/js0", connecting_using_ds4drv=False)
 # you can start listening before controller is paired, as long as you pair it within the timeout window
