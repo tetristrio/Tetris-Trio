@@ -1,14 +1,14 @@
 # imports
-import turtle
 import pygame
+from random import *
 import random
 pygame.mixer.pre_init(44100, 16, 2, 4096)
 pygame.init()
 
 # sets the screen
-screen_width = 800
-screen_height = 690
-display_width = 300
+screen_width = 1000
+screen_height = 790
+display_width = 600
 display_height = 600
 
 # how big the blocks are
@@ -126,24 +126,104 @@ J = [['.....',
       '.00..',
       '.....']]
 
-blocks = [T, Z, S, O, I, L, J]
-blocks_colors = [(0, 255, 0), (255, 0, 0), (0, 255, 255), (255, 255, 0), (255, 165, 0), (0, 0, 255), (128, 0, 128)]
+H = [['.....',
+      '.000.',
+      '.000.',
+      '.000.',
+      '.....']]
+
+E = [['.....',
+      '00000',
+      '00000',
+      '.....',
+      '.....'],
+     ['..00.',
+      '..00.',
+      '..00.',
+      '..00.',
+      '..00.']]
+
+W = [['.....',
+      '0.0.0',
+      '00000',
+      '.....',
+      '.....'],
+     ['..00.',
+      '..0..',
+      '..00.',
+      '..0..',
+      '..00.'],
+     ['.....',
+      '.....',
+      '00000',
+      '0.0.0',
+      '.....'],
+     ['.00..',
+      '..0..',
+      '.00..',
+      '..0..',
+      '.00..']]
+
+J = [['.....',
+      '.000.',
+      '..0..',
+      '..0..',
+      '.....'],
+     ['.....',
+      '...0.',
+      '.000.',
+      '...0.',
+      '.....'],
+     ['.....',
+      '..0..',
+      '..0..',
+      '.000.',
+      '.....'],
+     ['.....',
+      '.0...',
+      '.000.',
+      '.0...',
+      '.....']]
+
+Y = [['.....',
+      '.000.',
+      '.0.0.',
+      '.....',
+      '.....'],
+     ['.....',
+      '..00.',
+      '...0.',
+      '..00.',
+      '.....'],
+     ['.....',
+      '.0.0.',
+      '.000.',
+      '.....',
+      '.....'],
+     ['.....',
+      '.00..',
+      '.0...',
+      '.00..',
+      '.....']]
+
+blocks = [T, Z, S, O, I, L, J, H, E, W, J, Y]
+blocks_colors = [(0, 255, 0), (255, 0, 0), (0, 255, 255), (255, 255, 0), (255, 165, 0), (0, 0, 255), (128, 0, 128), (200, 200, 200), (128, 128, 0), (200, 128, 128), (128, 0, 255), (255, 128, 128)]
 
 # class creates the block and where it can be positioned
 class Block(object):
     rows = 20
-    columns = 10
+    columns = 20
 
     def __init__(self, column, row, shape):
         self.x = column
         self.y = row
         self.shape = shape
         self.color = blocks_colors[blocks.index(shape)]
-        self.rotation = 0  
-    
+        self.rotation = 0
+
 # makes the playable grid
 def make_grid(lock_positions = {}):
-    grid = [[(0,0,0) for x in range(10)] for x in range(20)]
+    grid = [[(0,0,0) for x in range(20)] for x in range(20)]
     for i in range(len(grid)):
         for j in range(len(grid[i])):
             if (j,i) in lock_positions:
@@ -166,7 +246,7 @@ def format_changeshape(shape):
 
 # function that determines the space that can be used
 def space_valid(shape, grid):
-    right_positions = [[(j, i) for j in range(10) if grid[i][j] == (0,0,0)] for i in range(20)]
+    right_positions = [[(j, i) for j in range(20) if grid[i][j] == (0,0,0)] for i in range(20)]
     right_positions = [j for sub in right_positions for j in sub]
     formatted = format_changeshape(shape)
     for position in formatted:
@@ -242,15 +322,15 @@ def clear_rows(grid, locked):
 def draw_next_shape(shape, surface):
     font = pygame.font.SysFont('bold', 40)
     label = font.render('Next Shape', 1, (255, 0, 255))
-    sx = x_topleft + display_width + 50
-    sy = y_topleft + display_height/2 - 100
+    sx = x_topleft + display_width - 200
+    sy = 30
     format = shape.shape[shape.rotation % len(shape.shape)]
     for i, line in enumerate(format):
         row = list(line)
         for j, column in enumerate(row):
             if column == '0':
-                pygame.draw.rect(surface, shape.color, (sx + j*30, sy + i*30, 30, 30), 0)
-    surface.blit(label, (sx +10, sy -30))
+                pygame.draw.rect(surface, shape.color, (sx + j*30 +100, sy + i*30 +30 , 30, 30), 0)
+    surface.blit(label, (sx + 100, sy + 10))
 
 # function displays the window
 def draw_window(surface, score = 0):
@@ -258,19 +338,18 @@ def draw_window(surface, score = 0):
     font = pygame.font.SysFont('bold', 60)
     label = font.render('Titanic Tetris', 1, (255, 0, 255))
     surface.blit(label, (x_topleft + display_width / 2 - (label.get_width() / 2), 30))
-
+    
     font = pygame.font.SysFont('bold', 60)
     label = font.render('Score: ' + str(score), 1, (255, 0, 255))
-    sx = x_topleft
+    sx = x_topleft - 200
     sy = y_topleft
-    surface.blit(label, (sx - 200, 30))
-    
+    surface.blit(label, (sx, 30))
     for i in range(len(grid)):
         for j in range(len(grid[i])):
             pygame.draw.rect(surface, grid[i][j], (x_topleft + j*30, y_topleft + i*30, 30, 30), 0)
-    draw_grid(surface, 20, 10)
+    draw_grid(surface, 20, 20)
     pygame.draw.rect(surface, (255, 255, 0), (x_topleft, y_topleft, display_width, display_height), 5)
-
+    
 # main program
 def mainProgram():
     global grid
@@ -295,14 +374,17 @@ def mainProgram():
             fall_speed -= 0.10
 
         if score >= 200:
-            fall_speed -=0.13
+            fall_speed -= 0.13
 
         if score >= 300:
             fall_speed -= 0.17
 
+        if score >= 500:
+            fall_speed -= 0.2
+
         grid = make_grid(lock_position)
         fall_time += clock.get_rawtime()
-        clock.tick()
+        clock.tick(60)
 
         if fall_time/1000 >= fall_speed:
             fall_time = 0
@@ -349,7 +431,6 @@ def mainProgram():
                     while space_valid(current_block, grid):
                         current_block.y += 1
                     current_block.y -= 1
-                    print(format_changeshape(current_block))
                 
 
         shape_position = format_changeshape(current_block)
@@ -370,7 +451,7 @@ def mainProgram():
             change_block = False
             score += clear_rows(grid, lock_position) * 10
             if clear_rows(grid, lock_position) == 4:
-                score += 60
+                score += 10
 
         # draws the window and puts the block in the grid
         draw_window(root, score)
@@ -382,8 +463,6 @@ def mainProgram():
 
     # game over image
     root.blit(background2, (0, 0))
-    # displays Game over if no more pieces can go down
-    draw_text_middle('Game Over! ', 40, (255, 255, 255), root)
     # delay for text to be displayed
     pygame.display.update()
     pygame.time.delay(5000)
@@ -416,7 +495,7 @@ pygame.display.set_caption('Titanic Tetris')
 background = pygame.image.load('TetrisImage.jpg')
 
 # Game over background
-background2 = pygame.image.load('Explosion.jpg')
+background2 = pygame.image.load('TitanicTetrisImage.jpg')
 
 # Ship image
 background3 = pygame.image.load('TitanicShip.jpg')

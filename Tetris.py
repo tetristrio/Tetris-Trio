@@ -410,7 +410,7 @@ pygame.display.set_caption('Tetris')
 background = pygame.image.load('NormalTetrisImage.png')
 
 # Game over background
-background2 = pygame.image.load('GameOverImage.jpg')
+background2 = pygame.image.load('GameOverTetrisImage.jpg')
 
 # Ship image
 background3 = pygame.image.load('NormalTetrisImage.png')
